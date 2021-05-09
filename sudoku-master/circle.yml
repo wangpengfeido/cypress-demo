@@ -1,0 +1,27 @@
+# to use orbs, must use version >= 2.1
+version: 2.1
+orbs:
+  # import Cypress orb by specifying an exact version x.y.z
+  # or the latest version 1.x.x using "@1" syntax
+  # https://github.com/cypress-io/circleci-orb
+  cypress: cypress-io/cypress@1
+
+executors:
+  full:
+    # cypress/included:4.5.0 Docker image is built on top of this Docker image
+    docker:
+      - image: 'cypress/browsers:node12.13.0-chrome80-ff74'
+    # let's go through the tests and generate all diffs
+    environment:
+      CYPRESS_failOnSnapshotDiff: false
+
+workflows:
+  build:
+    jobs:
+      # "cypress" is the name of the imported orb
+      # "run" is the name of the job defined in Cypress orb
+      - cypress/run:
+          executor: full
+          post-steps:
+              - store_artifacts:
+                  path: cypress/snapshots
