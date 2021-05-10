@@ -1,8 +1,8 @@
-import React, { FC, useRef, useEffect } from 'react';
-import * as echarts from 'echarts';
+import React, { FC, useRef, useEffect } from "react";
+import * as echarts from "echarts";
 
 interface IProps {
-  data: { x: number; y: number }[];
+  data?: { x: number; y: number }[];
 }
 
 const ChartsRender: FC<IProps> = ({ data }) => {
@@ -14,7 +14,7 @@ const ChartsRender: FC<IProps> = ({ data }) => {
       ref_chart.current = echarts.init(dom_container.current);
       ref_chart.current?.setOption({
         title: {
-          text: 'test chart',
+          text: "test chart",
         },
         tooltip: {},
         xAxis: {
@@ -27,21 +27,30 @@ const ChartsRender: FC<IProps> = ({ data }) => {
   }, []);
 
   useEffect(() => {
+    if (!data) {
+      return;
+    }
     ref_chart.current?.setOption({
       xAxis: {
         data: data.map((item) => item.x),
       },
       series: [
         {
-          name: 'value',
-          type: 'bar',
+          name: "value",
+          type: "bar",
           data: data.map((item) => item.y),
         },
       ],
     });
   }, [data]);
 
-  return <div ref={dom_container} style={{ width: 800, height: 400 }}></div>;
+  return (
+    <div
+      className="charts"
+      ref={dom_container}
+      style={{ width: 800, height: 400 }}
+    ></div>
+  );
 };
 
 export default React.memo(ChartsRender);
