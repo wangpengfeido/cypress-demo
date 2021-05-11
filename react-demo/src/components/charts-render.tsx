@@ -1,8 +1,14 @@
-import React, { FC, useRef, useEffect } from "react";
-import * as echarts from "echarts";
+import React, { FC, useRef, useEffect } from 'react';
+import * as echarts from 'echarts';
+
+export interface IChartDataItem {
+  x: number;
+  y: number;
+  color?: string;
+}
 
 interface IProps {
-  data?: { x: number; y: number }[];
+  data?: IChartDataItem[];
 }
 
 const ChartsRender: FC<IProps> = ({ data }) => {
@@ -11,10 +17,10 @@ const ChartsRender: FC<IProps> = ({ data }) => {
 
   useEffect(() => {
     if (dom_container.current) {
-      ref_chart.current = echarts.init(dom_container.current);
+      ref_chart.current = echarts.init(dom_container.current, undefined, { renderer: 'svg' });
       ref_chart.current?.setOption({
         title: {
-          text: "test chart",
+          text: 'test chart',
         },
         tooltip: {},
         xAxis: {
@@ -27,6 +33,18 @@ const ChartsRender: FC<IProps> = ({ data }) => {
   }, []);
 
   useEffect(() => {
+    let listener = () => {
+      if (ref_chart.current) {
+        ref_chart.current.resize();
+      }
+    };
+    window.addEventListener('resize', listener);
+    return () => {
+      window.removeEventListener('resize', listener);
+    };
+  }, []);
+
+  useEffect(() => {
     if (!data) {
       return;
     }
@@ -36,9 +54,14 @@ const ChartsRender: FC<IProps> = ({ data }) => {
       },
       series: [
         {
-          name: "value",
-          type: "bar",
-          data: data.map((item) => item.y),
+          name: 'value',
+          type: 'bar',
+          data: data.map((item) => ({
+            value: item.y,
+            itemStyle: {
+              color: item.color,
+            },
+          })),
         },
       ],
     });
@@ -46,9 +69,9 @@ const ChartsRender: FC<IProps> = ({ data }) => {
 
   return (
     <div
-      className="charts"
+      className="charts-container"
       ref={dom_container}
-      style={{ width: 800, height: 400 }}
+      style={{ width: '50%', height: 400 }}
     ></div>
   );
 };

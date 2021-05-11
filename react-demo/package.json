@@ -26,7 +26,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "cypress:open": "export APPLITOOLS_API_KEY=VJoLFaS0Of7G9QjhS0nWMaYZWvXb1Q1AhC3K3WHGW108E110 && cypress open",
+    "cypress:run-percy": "export PERCY_TOKEN=bc91bd24cb6e3138bcab7c377a13cccc24b34ab38fe0694ae3a4e5c421de3083 && percy exec -- cypress run --spec \"cypress/integration/charts-base/percy-snapshots.js\" --browser chrome"
   },
   "eslintConfig": {
     "extends": [
@@ -47,6 +49,12 @@
     ]
   },
   "devDependencies": {
-    "cypress": "4.5.0"
+    "@applitools/eyes-cypress": "^3.21.0",
+    "@cypress/react": "^5.5.0",
+    "@cypress/webpack-dev-server": "^1.1.6",
+    "@percy/cli": "^1.0.0-beta.48",
+    "@percy/cypress": "^3.1.0",
+    "cypress": "4.5.0",
+    "cypress-plugin-snapshots": "^1.4.4"
   }
 }
